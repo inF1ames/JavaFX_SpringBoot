@@ -14,7 +14,7 @@ import com.dxfeed.event.candle.CandlePrice;
 import com.dxfeed.event.candle.CandleSession;
 import com.dxfeed.event.candle.CandleSymbol;
 import com.dxfeed.event.candle.CandleType;
-import com.traderevolution.Context;
+import com.traderevolution.StatefulContext;
 import com.traderevolution.model.HistoryRequestModel;
 import com.traderevolution.model.ProcessImportModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,23 +24,26 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
 @Component
 public class DxFeedApi {
 
-    private final Context context;
+    private final StatefulContext context;
 
     private static final long MAX_CONNECT_TIME = 20000;
     private static final CandlePrice DEFAULT_CANDLE_PRICE = CandlePrice.LAST; // На данном этапе используем только значение LAST
     private static final String CSV_SEPARATOR = ",";
 
     @Autowired
-    public DxFeedApi(Context context) {
+    public DxFeedApi(StatefulContext context) {
         this.context = context;
     }
 
@@ -54,19 +57,32 @@ public class DxFeedApi {
         final DXEndpoint dxEndpoint = connect(context.getUrl(), Integer.parseInt(context.getPort()), context.getLogin(), context.getPassword());
         final HistoryRequestModel request = context.getRequestModels().get(0);
         final DXFeed feed = dxEndpoint.getFeed();
-        final long from = request.getFromDate();
-        final long to = request.getToDate();
         final CandleSession candleSession = request.isOnlyRegularHours() ? CandleSession.REGULAR : CandleSession.ANY;
         final CandleAlignment candleAlignment = request.isAlignOnTradingSession() ? CandleAlignment.SESSION : CandleAlignment.MIDNIGHT;
         final Optional<Character> exchangeCode = getExchangeCode(request.getSymbol());
         final CandleExchange candleExchange = exchangeCode.isPresent() ? CandleExchange.valueOf(exchangeCode.get()) : CandleExchange.COMPOSITE;
         final CandleSymbol candleSymbol = CandleSymbol.valueOf(request.getSymbol(), getCandlePeriod(request.getPeriod()), candleExchange, candleSession, candleAlignment, DEFAULT_CANDLE_PRICE);
-        context.getImportInfo().add(new ProcessImportModel(getDateTimeAsString(), "Start Importing data. Instrument: " + request.getSymbol() + " Data period: " + request.getPeriod()));
-        final List<Candle> candles = feed.getTimeSeriesPromise(Candle.class, candleSymbol, from, to).await(10, TimeUnit.SECONDS);
-        context.getImportInfo().add(new ProcessImportModel(getDateTimeAsString(), "Finish Importing data. Instrument: " + request.getSymbol() + " Data period: " + request.getPeriod()));
+        List<Candle> candles = fetchCandles(feed, candleSymbol, request);
         final String csvLines = candles.stream().map(this::toCsvLine).collect(Collectors.joining());
         System.out.println(csvLines);
         return new ByteArrayInputStream(csvLines.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private List<Candle> fetchCandles(DXFeed feed, CandleSymbol candleSymbol, HistoryRequestModel request) {
+
+        try {
+            context.getImportInfo()
+                    .add(new ProcessImportModel(getDateTimeAsString(), " Start Importing data. Instrument: " + request.getSymbol() + ";  Data period: " + request.getPeriod()));
+            final List<Candle> candles = feed.getTimeSeriesPromise(Candle.class, candleSymbol, request.getFromDate(), request.getToDate()).await(10, TimeUnit.SECONDS);
+            context.getImportInfo()
+                    .add(new ProcessImportModel(getDateTimeAsString(), " Finish Importing data. Instrument: " + request.getSymbol() + ";  Data period: " + request.getPeriod() + "; Bars: " + candles.size()));
+            return candles;
+        } catch (CancellationException e) {
+            context.getImportInfo()
+                    .add(new ProcessImportModel(getDateTimeAsString(), " Empty response. Instrument: " + request.getSymbol() + ";  Data period: " + request.getPeriod()));
+        }
+
+        return Collections.emptyList();
     }
 
     private static DXEndpoint connect(final String url, final int port, final String login, final String password) {

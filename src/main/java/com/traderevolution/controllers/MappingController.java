@@ -4,7 +4,8 @@
 
 package com.traderevolution.controllers;
 
-import com.traderevolution.Context;
+import com.traderevolution.StatefulContext;
+import com.traderevolution.dxfeedapi.DxFeedApi;
 import com.traderevolution.view.FxmlView;
 import com.traderevolution.view.StageManager;
 import javafx.event.ActionEvent;
@@ -21,7 +22,9 @@ public class MappingController implements FxmlController {
     private final StageManager stageManager;
 
     @Autowired
-    private Context context;
+    private StatefulContext context;
+    @Autowired
+    private DxFeedApi api;
 
     @FXML
     private CheckBox onlyRegularHours;

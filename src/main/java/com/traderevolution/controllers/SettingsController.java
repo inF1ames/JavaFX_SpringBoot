@@ -1,6 +1,6 @@
 package com.traderevolution.controllers;
 
-import com.traderevolution.Context;
+import com.traderevolution.StatefulContext;
 import com.traderevolution.model.HistoryRequestModel;
 import com.traderevolution.util.Period;
 import com.traderevolution.view.FxmlView;
@@ -36,7 +36,7 @@ public class SettingsController implements FxmlController {
     private final StageManager stageManager;
 
     @Autowired
-    private Context context;
+    private StatefulContext context;
 
     @FXML
     private TableView<HistoryRequestModel> table;

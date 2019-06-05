@@ -13,6 +13,7 @@ public class Main extends Application {
 
     protected ConfigurableApplicationContext springContext;
     protected StageManager stageManager;
+    public static Stage mainStage;
 
     public static void main(final String[] args) {
         Application.launch(args);
@@ -25,6 +26,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        mainStage = stage;
         stageManager = springContext.getBean(StageManager.class, stage);
         displayInitialScene();
     }

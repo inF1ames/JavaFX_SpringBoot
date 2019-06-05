@@ -18,12 +18,12 @@
             <TextField fx:id="instrumentName" layoutX="14.0" layoutY="144.0" />
             <Label layoutX="14.0" layoutY="126.0" text="Vendor instrument name" />
             <Separator layoutX="14.0" layoutY="351.0" prefHeight="3.0" prefWidth="568.0" />
-            <Button layoutX="302.0" layoutY="362.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Back" textFill="#f5efef">
+            <Button layoutX="327.0" layoutY="362.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Back" textFill="#f5efef">
                <opaqueInsets>
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </opaqueInsets>
             </Button>
-            <Button layoutX="438.0" layoutY="362.0" mnemonicParsing="false" onAction="#next" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Next" textFill="#f5efef">
+            <Button layoutX="465.0" layoutY="362.0" mnemonicParsing="false" onAction="#next" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Next" textFill="#f5efef">
                <opaqueInsets>
                   <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
                </opaqueInsets>

@@ -1,23 +1,30 @@
 package com.traderevolution.controllers;
 
+import com.traderevolution.Main;
 import com.traderevolution.dxfeedapi.DxFeedApi;
-import com.traderevolution.Context;
+import com.traderevolution.StatefulContext;
 import com.traderevolution.view.FxmlView;
 import com.traderevolution.view.StageManager;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
-@Component 
+import java.util.Collections;
+
+@Component
 public class LoginController implements FxmlController {
 
     @Autowired
-    private Context context;
+    private StatefulContext context;
 
     @FXML
     private TextField urlField;
@@ -43,25 +50,63 @@ public class LoginController implements FxmlController {
 
     @Override
     public void initialize() {
-    } 
+        setUpValidation(urlField);
+        setUpValidation(portField);
+        portField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                portField.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+    }
 
     @FXML
-    public void loginButtonPressed(ActionEvent event) {
-        if (DxFeedApi.checkCredentials(urlField.getText(), userField.getText(), passwordField.getText(), Integer.parseInt(portField.getText()))) {
-            context.setLogin(userField.getText());
-            context.setPassword(passwordField.getText());
-            context.setUrl(urlField.getText());
-            context.setPort(portField.getText());
-            stageManager.switchScene(FxmlView.DATA_TYPE_SETTINGS);
-        } else {
-            clearCredentials();
-            statusLabel.setText(LOGIN_ERROR_MSG);
-        }
+    public void login(ActionEvent event) {
+        Thread thread = new Thread(() -> {
+            Platform.runLater(() -> {
+                loginButton.setDisable(true);
+                Main.mainStage.getScene().setCursor(Cursor.WAIT);
+            });
+            if (DxFeedApi.checkCredentials(urlField.getText(), userField.getText(), passwordField.getText(), Integer.parseInt(portField.getText()))) {
+                context.setLogin(userField.getText());
+                context.setPassword(passwordField.getText());
+                context.setUrl(urlField.getText());
+                context.setPort(portField.getText());
+                Platform.runLater(() -> {
+                    loginButton.setDisable(false);
+                    stageManager.switchScene(FxmlView.DATA_TYPE_SETTINGS);
+                    Main.mainStage.getScene().setCursor(Cursor.DEFAULT);
+                });
+            } else {
+                Platform.runLater(() -> {
+                    loginButton.setDisable(false);
+                    Main.mainStage.getScene().setCursor(Cursor.DEFAULT);
+                    clearCredentials();
+                    statusLabel.setText(LOGIN_ERROR_MSG);
+                });
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void clearCredentials() {
         userField.clear();
         passwordField.clear();
+    }
+
+    private void setUpValidation(final TextField tf) {
+        tf.focusedProperty().addListener((observable, oldValue, newValue) -> validate(tf));
+    }
+
+    private void validate(TextField tf) {
+        ObservableList<String> styleClass = tf.getStyleClass();
+        if (Strings.isEmpty(tf.getText())) {
+            if (!styleClass.contains("error")) {
+                styleClass.add("error");
+            }
+        } else {
+            styleClass.removeAll(Collections.singleton("error"));
+        }
     }
 
 }
