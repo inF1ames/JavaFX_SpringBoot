@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.traderevolution.controllers.MappingController">
+   <children>
+      <AnchorPane layoutX="1.0" layoutY="3.0" prefHeight="400.0" prefWidth="600.0">
+         <children>
+            <Label layoutX="14.0" layoutY="23.0" text="INSTRUMENT MAPPING" />
+            <Separator layoutX="14.0" layoutY="38.0" prefHeight="0.0" prefWidth="568.0" />
+            <CheckBox fx:id="onlyRegularHours" layoutX="14.0" layoutY="77.0" mnemonicParsing="false" text="Only regular hours" />
+            <CheckBox fx:id="alignOnTradingSession" layoutX="236.0" layoutY="77.0" mnemonicParsing="false" text="Align on trading session" />
+            <TextField fx:id="instrumentName" layoutX="14.0" layoutY="144.0" />
+            <Label layoutX="14.0" layoutY="126.0" text="Vendor instrument name" />
+            <Separator layoutX="14.0" layoutY="351.0" prefHeight="3.0" prefWidth="568.0" />
+            <Button layoutX="302.0" layoutY="362.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Back" textFill="#f5efef">
+               <opaqueInsets>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </opaqueInsets>
+            </Button>
+            <Button layoutX="438.0" layoutY="362.0" mnemonicParsing="false" onAction="#next" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Next" textFill="#f5efef">
+               <opaqueInsets>
+                  <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+               </opaqueInsets>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

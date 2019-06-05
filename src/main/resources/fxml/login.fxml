@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="355.0" maxWidth="306.0" minHeight="355.0" minWidth="306.0" prefHeight="355.0" prefWidth="306.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.traderevolution.controllers.LoginController">
+
+  <children>
+    <Label fx:id="statusLabel" alignment="CENTER" layoutX="-12.0" layoutY="260.0" prefHeight="22.0" prefWidth="326.0" textFill="RED" />
+    <Label layoutX="57.0" layoutY="25.0" text="Url:" textFill="#686767" wrapText="true" />
+    <PasswordField fx:id="passwordField" layoutX="57.0" layoutY="202.0" prefWidth="187.0" text="demo" />
+    <TextField fx:id="urlField" layoutX="57.0" layoutY="44.0" prefWidth="187.0" text="demo.dxfeed.com" />
+    <Label layoutX="57.0" layoutY="80.0" text="Port:" textFill="#686767" wrapText="true" />
+    <TextField fx:id="userField" layoutX="57.0" layoutY="152.0" prefWidth="187.0" text="demo" />
+    <TextField fx:id="portField" layoutX="57.0" layoutY="95.0" prefWidth="187.0" text="7300" />
+    <Label layoutX="57.0" layoutY="134.0" text="Login:" textFill="#686767" wrapText="true" />
+    <Label layoutX="58.0" layoutY="187.0" text="Passowrd:" textFill="#686767" wrapText="true" />
+    <Button layoutX="175.0" layoutY="316.0" mnemonicParsing="false" onAction="#loginButtonPressed" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Next" textFill="#f5efef">
+      <opaqueInsets>
+        <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+      </opaqueInsets>
+    </Button>
+  </children>
+</AnchorPane>
