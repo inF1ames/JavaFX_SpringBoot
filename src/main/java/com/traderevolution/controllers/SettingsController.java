@@ -16,10 +16,13 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Paint;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import tornadofx.control.DateTimePicker;
 
@@ -27,10 +30,13 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 
 @Component
+@Scope("prototype")
+@Lazy
 public class SettingsController implements FxmlController {
 
     private final StageManager stageManager;
@@ -48,7 +54,7 @@ public class SettingsController implements FxmlController {
     private ComboBox<String> period;
 
 
-    private ObservableList<HistoryRequestModel> data;
+    private ObservableList<HistoryRequestModel> data = FXCollections.observableArrayList();
     private final String DEFAULT_TARGET_DATA_TYPE = "Trade";
 
     @Autowired
@@ -59,10 +65,11 @@ public class SettingsController implements FxmlController {
 
     @Override
     public void initialize() {
+        setUpValidation(dateFrom);
+        setUpValidation(dateTo);
         period.setItems(FXCollections.observableArrayList(Arrays.stream(Period.values()).map(Enum::name).collect(Collectors.toList())));
         period.getSelectionModel().selectFirst();
 
-        data = FXCollections.observableArrayList();
         TableColumn<HistoryRequestModel, String> periodColumn = new TableColumn<>("Vendor data Period");
         periodColumn.setCellValueFactory(new PropertyValueFactory<>("period"));
 
@@ -88,20 +95,26 @@ public class SettingsController implements FxmlController {
                 deleteButton.setTextFill(Paint.valueOf("#f5efef"));
                 setAlignment(Pos.CENTER);
                 setGraphic(deleteButton);
-                deleteButton.setOnAction(event ->  getTableView().getItems().remove(item));
+                deleteButton.setOnAction(event -> {
+                    getTableView().getItems().remove(item);
+                    context.getRequestModels().remove(item);
+                });
             }
         });
 
         table.getColumns().setAll(periodColumn, targetDataType, dateRangeColumn, remove);
 
-        table.setItems(data);
+        table.setItems(context.getRequestModels());
     }
 
     @FXML
     public void add(ActionEvent event) throws IOException {
+        if (dateFrom.getValue() == null || dateTo.getValue() == null) {
+            validate(dateFrom);
+            validate(dateTo);
+            return;
+        }
         final HistoryRequestModel historyRequestModel = fillRequest();
-
-        data.add(historyRequestModel);
         context.getRequestModels().add(historyRequestModel);
     }
 
@@ -128,6 +141,21 @@ public class SettingsController implements FxmlController {
 
     private long getMillis(LocalDateTime localDateTime) {
         return localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
+
+    private void setUpValidation(final DateTimePicker dtp) {
+        dtp.focusedProperty().addListener((observable, oldValue, newValue) -> validate(dtp));
+    }
+
+    private void validate(DateTimePicker dtp) {
+        ObservableList<String> styleClass = dtp.getStyleClass();
+        if (dtp.getValue() == null) {
+            if (!styleClass.contains("error")) {
+                styleClass.add("error");
+            }
+        } else {
+            styleClass.removeAll(Collections.singleton("error"));
+        }
     }
 
 }

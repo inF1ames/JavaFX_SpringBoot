@@ -20,9 +20,6 @@ import com.traderevolution.model.ProcessImportModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -30,8 +27,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 
 @Component
 public class DxFeedApi {
@@ -40,7 +35,6 @@ public class DxFeedApi {
 
     private static final long MAX_CONNECT_TIME = 20000;
     private static final CandlePrice DEFAULT_CANDLE_PRICE = CandlePrice.LAST; // На данном этапе используем только значение LAST
-    private static final String CSV_SEPARATOR = ",";
 
     @Autowired
     public DxFeedApi(StatefulContext context) {
@@ -53,7 +47,7 @@ public class DxFeedApi {
         return dxEndpoint != null;
     }
 
-    public InputStream getInputStream() {
+    public void fetchCandles() {
         final DXEndpoint dxEndpoint = connect(context.getUrl(), Integer.parseInt(context.getPort()), context.getLogin(), context.getPassword());
         final HistoryRequestModel request = context.getRequestModels().get(0);
         final DXFeed feed = dxEndpoint.getFeed();
@@ -63,9 +57,7 @@ public class DxFeedApi {
         final CandleExchange candleExchange = exchangeCode.isPresent() ? CandleExchange.valueOf(exchangeCode.get()) : CandleExchange.COMPOSITE;
         final CandleSymbol candleSymbol = CandleSymbol.valueOf(request.getSymbol(), getCandlePeriod(request.getPeriod()), candleExchange, candleSession, candleAlignment, DEFAULT_CANDLE_PRICE);
         List<Candle> candles = fetchCandles(feed, candleSymbol, request);
-        final String csvLines = candles.stream().map(this::toCsvLine).collect(Collectors.joining());
-        System.out.println(csvLines);
-        return new ByteArrayInputStream(csvLines.getBytes(StandardCharsets.UTF_8));
+        context.getCandles().addAll(candles);
     }
 
     private List<Candle> fetchCandles(DXFeed feed, CandleSymbol candleSymbol, HistoryRequestModel request) {
@@ -117,25 +109,6 @@ public class DxFeedApi {
             return Optional.of(vendorInstrName.split("&")[1].charAt(0));
         }
         return Optional.empty();
-    }
-
-    private String toCsvLine(final Candle candle) {
-        return new StringBuilder()
-                .append(candle.getTime())
-                .append(CSV_SEPARATOR)
-                .append(candle.getCount())
-                .append(CSV_SEPARATOR)
-                .append(candle.getOpen())
-                .append(CSV_SEPARATOR)
-                .append(candle.getHigh())
-                .append(CSV_SEPARATOR)
-                .append(candle.getLow())
-                .append(CSV_SEPARATOR)
-                .append(candle.getClose())
-                .append(CSV_SEPARATOR)
-                .append(candle.getVolume())
-                .append(System.lineSeparator())
-                .toString();
     }
 
     private String getDateTimeAsString() {

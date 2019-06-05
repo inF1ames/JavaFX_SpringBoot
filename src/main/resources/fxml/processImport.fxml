@@ -7,23 +7,32 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import java.net.URL?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="822.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.traderevolution.controllers.ProcessImportController">
+    <stylesheets><URL value="@styles.css" /></stylesheets>
     <children>
         <TableView fx:id="table" layoutX="17.0" layoutY="74.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="371.0" prefWidth="789.0">
             <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
         </TableView>
       <Separator layoutX="14.0" layoutY="59.0" prefHeight="0.0" prefWidth="789.0" />
-      <Separator layoutX="17.0" layoutY="508.0" prefHeight="3.0" prefWidth="789.0" />
-      <Button layoutX="550.0" layoutY="536.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Back" textFill="#f5efef">
+      <Separator layoutX="12.0" layoutY="526.0" prefHeight="3.0" prefWidth="789.0" />
+      <Button layoutX="550.0" layoutY="536.0" mnemonicParsing="false" onAction="#back" prefHeight="25.0" prefWidth="117.0" styleClass="back-next" text="Back" textFill="#f5efef">
          <opaqueInsets>
             <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
          </opaqueInsets>
       </Button>
-      <Button layoutX="689.0" layoutY="536.0" mnemonicParsing="false" onAction="#next" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Next" textFill="#f5efef">
+      <Button layoutX="689.0" layoutY="536.0" mnemonicParsing="false" onAction="#newWizard" prefHeight="25.0" prefWidth="117.0" styleClass="back-next" text="New wizard" textFill="#f5efef">
          <opaqueInsets>
             <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
          </opaqueInsets>
       </Button>
       <Label layoutX="14.0" layoutY="42.0" text="PROCESS IMPORT" />
+      <Separator layoutX="17.0" layoutY="476.0" prefHeight="3.0" prefWidth="789.0" />
+      <Label layoutX="14.0" layoutY="461.0" text="PROCESS RESULT" />
+      <MenuButton fx:id="menuButton" graphicTextGap="0.0" layoutX="18.0" layoutY="488.0" mnemonicParsing="false" styleClass="add" text="Export to" textFill="WHITE">
+      </MenuButton>
     </children>
+   <opaqueInsets>
+      <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+   </opaqueInsets>
 </AnchorPane>

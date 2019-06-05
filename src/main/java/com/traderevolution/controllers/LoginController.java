@@ -61,6 +61,11 @@ public class LoginController implements FxmlController {
 
     @FXML
     public void login(ActionEvent event) {
+        if (urlField.getText().isEmpty() || portField.getText().isEmpty()) {
+            validate(urlField);
+            validate(portField);
+            return;
+        }
         Thread thread = new Thread(() -> {
             Platform.runLater(() -> {
                 loginButton.setDisable(true);

@@ -14,9 +14,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Lazy
+@Scope("prototype")
 public class MappingController implements FxmlController {
 
     private final StageManager stageManager;
@@ -41,7 +44,9 @@ public class MappingController implements FxmlController {
 
     @Override
     public void initialize() {
-
+        onlyRegularHours.setSelected(context.getRequestModels().get(0).isOnlyRegularHours());
+        alignOnTradingSession.setSelected(context.getRequestModels().get(0).isAlignOnTradingSession());
+        instrumentName.setText(context.getRequestModels().get(0).getSymbol());
     }
 
     @FXML

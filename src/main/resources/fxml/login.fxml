@@ -24,7 +24,7 @@
     <TextField fx:id="portField" layoutX="57.0" layoutY="95.0" prefWidth="187.0" promptText="7300" />
     <Label layoutX="57.0" layoutY="134.0" text="Login:" textFill="#686767" wrapText="true" />
     <Label layoutX="58.0" layoutY="187.0" text="Passowrd:" textFill="#686767" wrapText="true" />
-    <Button fx:id="loginButton" layoutX="175.0" layoutY="316.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="117.0" style="-fx-background-color: #666666;" text="Next" textFill="#f5efef">
+    <Button fx:id="loginButton" layoutX="175.0" layoutY="316.0" mnemonicParsing="false" onAction="#login" prefHeight="25.0" prefWidth="117.0" styleClass="back-next" text="Next" textFill="#f5efef">
       <opaqueInsets>
         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
       </opaqueInsets>

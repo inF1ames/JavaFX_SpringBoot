@@ -4,6 +4,7 @@
 
 package com.traderevolution;
 
+import com.dxfeed.event.candle.Candle;
 import com.traderevolution.model.HistoryRequestModel;
 import com.traderevolution.model.ProcessImportModel;
 import javafx.collections.FXCollections;
@@ -19,6 +20,7 @@ public class StatefulContext {
     private String port;
     private ObservableList<HistoryRequestModel> requestModels = FXCollections.observableArrayList();
     private ObservableList<ProcessImportModel> importInfo = FXCollections.observableArrayList();
+    private ObservableList<Candle> candles = FXCollections.observableArrayList();
 
     public String getLogin() {
         return login;
@@ -58,5 +60,19 @@ public class StatefulContext {
 
     public ObservableList<ProcessImportModel> getImportInfo() {
         return importInfo;
+    }
+
+    public ObservableList<Candle> getCandles() {
+        return candles;
+    }
+
+    public void clearContext() {
+        this.login = null;
+        this.password = null;
+        this.url = null;
+        this.port = null;
+        this.requestModels.clear();
+        this.importInfo.clear();
+        this.candles.clear();
     }
 }

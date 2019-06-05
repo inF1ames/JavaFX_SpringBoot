@@ -9,7 +9,7 @@ public class HistoryRequestModel {
     private long toDate;
     private boolean onlyRegularHours;
     private boolean alignOnTradingSession;
-    private String symbol;
+    private String symbol = "";
 
     public String getPeriod() {
         return period;
