@@ -1,10 +1,10 @@
-package com.traderevolution.controllers;
+package com.company.controllers;
 
-import com.traderevolution.StatefulContext;
-import com.traderevolution.model.HistoryRequestModel;
-import com.traderevolution.util.Period;
-import com.traderevolution.view.FxmlView;
-import com.traderevolution.view.StageManager;
+import com.company.StatefulContext;
+import com.company.model.HistoryRequestModel;
+import com.company.util.Period;
+import com.company.view.FxmlView;
+import com.company.view.StageManager;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,10 +16,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Paint;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -27,8 +25,10 @@ import org.springframework.stereotype.Component;
 import tornadofx.control.DateTimePicker;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -52,6 +52,8 @@ public class SettingsController implements FxmlController {
     private DateTimePicker dateTo;
     @FXML
     private ComboBox<String> period;
+    @FXML
+    private Button addButton;
 
 
     private ObservableList<HistoryRequestModel> data = FXCollections.observableArrayList();
@@ -98,6 +100,7 @@ public class SettingsController implements FxmlController {
                 deleteButton.setOnAction(event -> {
                     getTableView().getItems().remove(item);
                     context.getRequestModels().remove(item);
+                    addButton.setDisable(false);
                 });
             }
         });
@@ -109,22 +112,25 @@ public class SettingsController implements FxmlController {
 
     @FXML
     public void add(ActionEvent event) throws IOException {
-        if (dateFrom.getValue() == null || dateTo.getValue() == null) {
-            validate(dateFrom);
-            validate(dateTo);
+        if (!validateRange()) {
             return;
         }
         final HistoryRequestModel historyRequestModel = fillRequest();
         context.getRequestModels().add(historyRequestModel);
+        addButton.setDisable(true);
     }
 
     @FXML
     public void back(ActionEvent event) {
+        context.clearContext();
         stageManager.switchScene(FxmlView.LOGIN);
     }
 
     @FXML
     public void next(ActionEvent event) {
+        if (context.getRequestModels().isEmpty()) {
+            return;
+        }
         stageManager.switchScene(FxmlView.MAPPING);
     }
 
@@ -135,7 +141,7 @@ public class SettingsController implements FxmlController {
         model.setToDate(getMillis(dateTo.getDateTimeValue()));
         model.setPeriod(period.getValue());
         model.setTargetDataType(DEFAULT_TARGET_DATA_TYPE);
-        model.setDateRange(dateFrom.getValue() + " / " + dateTo.getValue());
+        model.setDateRange(formatLocalDate(dateFrom.getDateTimeValue()) + " / " + formatLocalDate(dateTo.getDateTimeValue()));
         return model;
     }
 
@@ -156,6 +162,34 @@ public class SettingsController implements FxmlController {
         } else {
             styleClass.removeAll(Collections.singleton("error"));
         }
+    }
+
+    private boolean validateRange() {
+        LocalDate from = dateFrom.getValue();
+        LocalDate to = dateTo.getValue();
+        if (from != null && to != null) {
+            if (from.isAfter(to)) {
+                ObservableList<String> fromStyleClass = dateFrom.getStyleClass();
+                if (!fromStyleClass.contains("error")) {
+                    fromStyleClass.add("error");
+                }
+                return false;
+            }
+            if (to.isAfter(LocalDate.now())) {
+                ObservableList<String> toStyleClass = dateTo.getStyleClass();
+                if (!toStyleClass.contains("error")) {
+                    toStyleClass.add("error");
+                }
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private String formatLocalDate(LocalDateTime date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        return date.format(formatter);
     }
 
 }

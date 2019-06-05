@@ -2,7 +2,7 @@
  * Copyright TraderEvolution LTD. © 2018.. All rights reserved.
  */
 
-package com.traderevolution.model;
+package com.company.model;
 
 public class ProcessImportModel {
 

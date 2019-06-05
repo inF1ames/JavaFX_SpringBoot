@@ -2,20 +2,24 @@
  * Copyright TraderEvolution LTD. © 2018.. All rights reserved.
  */
 
-package com.traderevolution.controllers;
+package com.company.controllers;
 
-import com.traderevolution.StatefulContext;
-import com.traderevolution.dxfeedapi.DxFeedApi;
-import com.traderevolution.view.FxmlView;
-import com.traderevolution.view.StageManager;
+import com.company.StatefulContext;
+import com.company.dxfeedapi.DxFeedApi;
+import com.company.view.FxmlView;
+import com.company.view.StageManager;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
 
 @Component
 @Lazy
@@ -47,6 +51,7 @@ public class MappingController implements FxmlController {
         onlyRegularHours.setSelected(context.getRequestModels().get(0).isOnlyRegularHours());
         alignOnTradingSession.setSelected(context.getRequestModels().get(0).isAlignOnTradingSession());
         instrumentName.setText(context.getRequestModels().get(0).getSymbol());
+        setUpValidation(instrumentName);
     }
 
     @FXML
@@ -56,6 +61,10 @@ public class MappingController implements FxmlController {
 
     @FXML
     public void next(ActionEvent event) {
+        if (instrumentName.getText().isEmpty()) {
+            validate(instrumentName);
+            return;
+        }
         fillRequest();
         stageManager.switchScene(FxmlView.PROCESS_IMPORT);
     }
@@ -66,6 +75,21 @@ public class MappingController implements FxmlController {
             request.setAlignOnTradingSession(alignOnTradingSession.isSelected());
             request.setSymbol(instrumentName.getText());
         });
+    }
+
+    private void setUpValidation(final TextField tf) {
+        tf.focusedProperty().addListener((observable, oldValue, newValue) -> validate(tf));
+    }
+
+    private void validate(TextField tf) {
+        ObservableList<String> styleClass = tf.getStyleClass();
+        if (Strings.isEmpty(tf.getText())) {
+            if (!styleClass.contains("error")) {
+                styleClass.add("error");
+            }
+        } else {
+            styleClass.removeAll(Collections.singleton("error"));
+        }
     }
 
 }

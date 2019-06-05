@@ -1,12 +1,12 @@
-package com.traderevolution;
+package com.company;
 
-import com.traderevolution.view.FxmlView;
+import com.company.view.FxmlView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import com.traderevolution.view.StageManager;
+import com.company.view.StageManager;
 
 @SpringBootApplication
 public class Main extends Application {

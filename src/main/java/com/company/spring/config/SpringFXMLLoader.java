@@ -1,4 +1,4 @@
-package com.traderevolution.spring.config;
+package com.company.spring.config;
 
 import java.io.IOException;
 

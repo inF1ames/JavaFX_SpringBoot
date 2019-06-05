@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import tornadofx.control.DateTimePicker?>
 <?import java.net.URL?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="822.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.traderevolution.controllers.SettingsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="575.0" prefWidth="822.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.company.controllers.SettingsController">
     <stylesheets>
         <URL value="@styles.css" />
     </stylesheets>
@@ -19,7 +15,7 @@
         <TableView fx:id="table" layoutX="18.0" layoutY="41.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="371.0" prefWidth="789.0">
             <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
         </TableView>
-        <Button layoutX="618.0" layoutY="489.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="181.0" styleClass="add" text="Add" textFill="#fffbfb">
+        <Button fx:id="addButton" layoutX="618.0" layoutY="489.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="181.0" styleClass="add" text="Add" textFill="#fffbfb">
             <opaqueInsets>
                 <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
             </opaqueInsets>

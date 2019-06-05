@@ -1,6 +1,6 @@
-package com.traderevolution.spring.config;
+package com.company.spring.config;
 
-import com.traderevolution.view.StageManager;
+import com.company.view.StageManager;
 import java.io.IOException;
 
 import javafx.stage.Stage;

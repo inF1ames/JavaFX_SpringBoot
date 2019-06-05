@@ -1,4 +1,4 @@
-package com.traderevolution.view;
+package com.company.view;
 
 import java.util.ResourceBundle;
 

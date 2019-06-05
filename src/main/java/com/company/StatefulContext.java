@@ -2,11 +2,11 @@
  * Copyright TraderEvolution LTD. © 2018.. All rights reserved.
  */
 
-package com.traderevolution;
+package com.company;
 
 import com.dxfeed.event.candle.Candle;
-import com.traderevolution.model.HistoryRequestModel;
-import com.traderevolution.model.ProcessImportModel;
+import com.company.model.HistoryRequestModel;
+import com.company.model.ProcessImportModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.springframework.stereotype.Component;

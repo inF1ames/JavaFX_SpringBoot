@@ -1,6 +1,6 @@
-package com.traderevolution.view;
+package com.company.view;
 
-import com.traderevolution.spring.config.SpringFXMLLoader;
+import com.company.spring.config.SpringFXMLLoader;
 import java.util.Objects;
 import javafx.application.Platform;
 import javafx.scene.Parent;
@@ -30,6 +30,7 @@ public class StageManager {
         
         primaryStage.setTitle(title);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.sizeToScene();
         primaryStage.centerOnScreen();
         

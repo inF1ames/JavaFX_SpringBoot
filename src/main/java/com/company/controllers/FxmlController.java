@@ -1,4 +1,4 @@
-package com.traderevolution.controllers;
+package com.company.controllers;
 
 public interface FxmlController {
 

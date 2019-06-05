@@ -2,20 +2,18 @@
  * Copyright TraderEvolution LTD. © 2018.. All rights reserved.
  */
 
-package com.traderevolution.controllers;
+package com.company.controllers;
 
 import com.dxfeed.event.candle.Candle;
-import com.traderevolution.Main;
-import com.traderevolution.StatefulContext;
-import com.traderevolution.dxfeedapi.DxFeedApi;
-import com.traderevolution.model.ProcessImportModel;
-import com.traderevolution.spring.config.SpringFXMLLoader;
-import com.traderevolution.view.FxmlView;
-import com.traderevolution.view.StageManager;
-import javafx.application.Platform;
+import com.company.Main;
+import com.company.StatefulContext;
+import com.company.dxfeedapi.DxFeedApi;
+import com.company.model.ProcessImportModel;
+import com.company.spring.config.SpringFXMLLoader;
+import com.company.view.FxmlView;
+import com.company.view.StageManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -23,8 +21,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +29,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 @Component
@@ -83,7 +77,8 @@ public class ProcessImportController implements FxmlController {
     public void initialize() {
         final MenuItem csv = new MenuItem("Export to CSV");
         csv.setOnAction(e -> {
-            String fileName = "log_" + LocalDateTime.now() + ".csv";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH-mm-ss");
+            String fileName = "log_" + LocalDateTime.now().format(formatter) + ".csv";
             Path log = Paths.get(fileName);
             try {
                 Files.write(log, context.getCandles().stream().map(this::toCsvLine).collect(Collectors.toList()), StandardCharsets.UTF_8, StandardOpenOption.CREATE);

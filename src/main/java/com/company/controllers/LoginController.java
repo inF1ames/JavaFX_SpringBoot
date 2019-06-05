@@ -1,10 +1,10 @@
-package com.traderevolution.controllers;
+package com.company.controllers;
 
-import com.traderevolution.Main;
-import com.traderevolution.dxfeedapi.DxFeedApi;
-import com.traderevolution.StatefulContext;
-import com.traderevolution.view.FxmlView;
-import com.traderevolution.view.StageManager;
+import com.company.Main;
+import com.company.StatefulContext;
+import com.company.dxfeedapi.DxFeedApi;
+import com.company.view.FxmlView;
+import com.company.view.StageManager;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

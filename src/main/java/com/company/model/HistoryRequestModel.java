@@ -1,4 +1,4 @@
-package com.traderevolution.model;
+package com.company.model;
 
 public class HistoryRequestModel {
 

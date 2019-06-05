@@ -2,7 +2,7 @@
  * Copyright TraderEvolution LTD. © 2018.. All rights reserved.
  */
 
-package com.traderevolution.dxfeedapi;
+package com.company.dxfeedapi;
 
 import com.dxfeed.api.DXEndpoint;
 import com.dxfeed.api.DXFeed;
@@ -14,9 +14,9 @@ import com.dxfeed.event.candle.CandlePrice;
 import com.dxfeed.event.candle.CandleSession;
 import com.dxfeed.event.candle.CandleSymbol;
 import com.dxfeed.event.candle.CandleType;
-import com.traderevolution.StatefulContext;
-import com.traderevolution.model.HistoryRequestModel;
-import com.traderevolution.model.ProcessImportModel;
+import com.company.StatefulContext;
+import com.company.model.HistoryRequestModel;
+import com.company.model.ProcessImportModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
